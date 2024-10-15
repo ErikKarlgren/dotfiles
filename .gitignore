@@ -1,0 +1,8 @@
+# Ignore everything, unless explicitly stated otherwise
+*
+.*
+
+!.gitconfig
+!.gitignore
+!.local/bin/
+!.config/
