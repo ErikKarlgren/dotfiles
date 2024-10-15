@@ -1,0 +1,47 @@
+[user]
+	email = erik.karldom@gmail.com
+	name = Erik Karlgren Domercq
+
+[core]
+	editor = nvim
+
+	# Speed up commands involving untracked files such as `git status`.
+	# https://git-scm.com/docs/git-update-index#_untracked_cache
+	untrackedCache = true
+
+[alias]
+	a = add
+	br = branch
+	ca = commit --amend
+	can = commit --amend --no-edit
+	ch = checkout
+	co = commit
+	pf = push --force-with-lease
+	ps = push
+	rc = rebase --continue
+	re = rebase
+	s = status
+	sw = switch
+	swc = switch -c
+
+[diff]
+	# Detect copies as well as renames
+	renames = copies
+
+[diff "bin"]
+	# Use `hexdump` to diff binary files.
+	textconv = hexdump -v -C
+
+[help]
+	# Automatically correct and execute mistyped commands.
+	autocorrect = 1
+
+[init]
+	defaultBranch = main
+
+[merge]
+	conflictstyle = diff3
+
+[push]
+	# Make `git push` push relevant annotated tags when pushing branches out.
+	followTags = true
