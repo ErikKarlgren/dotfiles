@@ -20,7 +20,7 @@
 	ps = push
 	rc = rebase --continue
 	re = rebase
-	s = status
+	s = status -s
 	sw = switch
 	swc = switch -c
 
