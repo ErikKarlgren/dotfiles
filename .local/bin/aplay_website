@@ -1,0 +1,11 @@
+#!/bin/bash
+
+URL="$1"
+RATE="$2"
+
+if [ -z "$RATE" ]
+then
+  curl "$URL" | aplay
+else
+  curl $URL | aplay -r $RATE
+fi

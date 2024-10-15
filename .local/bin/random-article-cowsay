@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export LC_ALL="en_US.UTF-8"
+random-article | cowsay -r -W "$(qalc -t "$(tput cols)" - 4)"
+

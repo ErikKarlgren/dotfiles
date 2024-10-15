@@ -1,0 +1,14 @@
+#!/bin/bash
+NATIVEFIER_APPS_DIR="/opt"
+
+if [ -n "$TERM" ] && which tput &> /dev/null; then
+	# Check `man terminfo`
+	BOLD=$(tput bold)
+	GREEN=$(tput setaf 2)
+	RESET=$(tput sgr0)
+fi
+
+for app in $(fd --max-depth 1 --type dir x64 $NATIVEFIER_APPS_DIR); do
+	echo "${BOLD}${GREEN}🔄 Updating $app...${RESET}"
+	(set +x; nativefier --upgrade "$app")
+done

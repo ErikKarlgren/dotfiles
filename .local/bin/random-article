@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+
+import curses
+import requests
+from bs4 import BeautifulSoup
+
+def get_random_wikipedia_summary():
+    # URL for Wikipedia's random article feature
+    url = "https://en.wikipedia.org/wiki/Special:Random"
+
+    # Send a GET request to the URL
+    response = requests.get(url)
+
+    # Get the URL of the random article from the redirect
+    article_url = response.url
+
+    # Parse the HTML content
+    soup = BeautifulSoup(response.content, 'html.parser')
+    if soup is None:
+        print("No article found :(")
+        exit(1)
+
+    # Extract the title
+    title = soup.find(id="firstHeading").text
+
+    # Extract the summary (first paragraph)
+    summary = soup.find('div', class_='mw-parser-output').find('p', class_=False).text
+
+    return title, summary, article_url
+
+
+# Use the function
+try:
+    title, summary, article_url = get_random_wikipedia_summary()
+    print(f"{title}")
+    print()
+    print(f"{summary}")
+    print(article_url)
+except Exception as e:
+    print(f"An error occurred: {e}")

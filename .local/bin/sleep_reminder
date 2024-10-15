@@ -1,0 +1,7 @@
+#!/bin/bash
+notify-send -u "critical" \
+    -a "Sleeping time" \
+    "Go to sleep by 23:00" \
+    "If you don't, you're gonna feel tired tomorrow and have no energy \
+    after work to do the stuff that really matters"
+
