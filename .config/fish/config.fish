@@ -11,8 +11,8 @@ if status is-interactive
         alias ls 'lsd -A'
         alias ll 'lsd -Al'
     else
-        alias ls 'ls -A'
-        alias ll 'ls -Ahl'
+        alias ls 'ls -A --color=auto'
+        alias ll 'ls -Ahl --color=auto'
     end
 
     if command -q random
