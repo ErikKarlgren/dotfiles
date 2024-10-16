@@ -7,3 +7,4 @@
 !.local/bin/
 !.config/
 .dotfiles/
+!README.md
