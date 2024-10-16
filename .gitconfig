@@ -24,6 +24,12 @@
 	# From https://jordanelver.co.uk/blog/2020/06/04/fixing-commits-with-git-commit-fixup-and-git-rebase-autosquash/
 	fixup = "!git log -n 50 --pretty=format:'%h %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
 
+	# Push the current branch to a given remote, or to origin instead
+	# There's a git config option that lets one use just "push" instead, but I think I'd rather be more explicit
+	# In any case, doing "git pushups" sounds funny
+	pushup = "!f() { remote=\"${1:-origin}\"; git push --set-upstream \"$remote\" \"$(git branch --show-current)\"; }; f"
+
+
 [color]
 	ui = auto
 [color "branch"]
