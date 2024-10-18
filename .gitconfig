@@ -11,6 +11,9 @@
 	co = commit
 	coi = commit --interactive
 	cp = cherry-pick
+	d = diff
+	dno = diff --name-only
+	ds = diff --staged
 	pf = push --force-with-lease
 	ps = push
 	rc = rebase --continue
