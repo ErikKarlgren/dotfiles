@@ -4,7 +4,9 @@
 
 !.gitconfig
 !.gitignore
+!.local/
 !.local/bin/
+!.local/bin/*
 !.config/
 .dotfiles/
 !README.md
