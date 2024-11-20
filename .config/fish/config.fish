@@ -24,6 +24,7 @@ if status is-interactive
     # Bindings
     bind '[3;5~' kill-word  # ctrl + supr: delete word to the right
 
+    set -x MANPAGER 'nvim +Man!'
 end
 
 set -x EDITOR "nvim"
