@@ -20,3 +20,14 @@ config config --local status.showUntrackedFiles no
 
 # And you're done!
 ```
+
+## Possible issues
+### Cannot fetch remote branches
+Check `~/.dotfiles/config`, and make sure that the section `remote "origin"` looks like this:
+```toml
+[remote "origin"]
+	url = ...
+	fetch = +refs/heads/*:refs/remotes/origin/*
+
+```
+If the "fetch" line was missing, add it, and your problem should be fixed.
