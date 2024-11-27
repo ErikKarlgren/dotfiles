@@ -21,6 +21,7 @@
 	re = rebase
 	ri = rebase -i
 	s = status -s
+	st = status
 	sw = switch
 	swc = switch -c
 	wk = worktree
