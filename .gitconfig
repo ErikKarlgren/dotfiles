@@ -36,6 +36,9 @@
 	# In any case, doing "git pushups" sounds funny
 	pushup = "!f() { remote=\"${1:-origin}\"; git push --set-upstream \"$remote\" \"$(git branch --show-current)\"; }; f"
 
+	# git switch with fzf
+	swz = "!f() { git switch $(git branch | tr --delete '* ' | fzf --preview='git log --oneline --color -50 {}'); }; f"
+
 
 [color]
 	ui = auto
