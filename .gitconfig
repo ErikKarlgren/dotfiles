@@ -37,7 +37,11 @@
 	pushup = "!f() { remote=\"${1:-origin}\"; git push --set-upstream \"$remote\" \"$(git branch --show-current)\"; }; f"
 
 	# git switch with fzf
-	swz = "!f() { git switch $(git branch | tr --delete '* ' | fzf --preview='git log --oneline --color -50 {}'); }; f"
+	swz = "!f() { git switch $(git branch | tr --delete '* ' | fzf --header='Select a branch to switch to' --preview='git log --oneline --color -50 {}'); }; f"
+	# git delete branch with fzf
+	brd = "!f() { git branch --delete $(git branch | tr --delete '* ' | fzf --multi --header='Select branch to delete' --preview='git log --oneline --color -50 {}'); }; f"
+	# git force delete branch with fzf
+	brfd = "!f() { git branch --delete --force $(git branch | tr --delete '* ' | fzf --multi --header='Select branch to FORCE delete' --preview='git log --oneline --color -50 {}'); }; f"
 
 
 [color]
