@@ -26,8 +26,9 @@
 	swc = switch -c
 	wk = worktree
 
-	# Shows the commit hashes of any given commit-range
-	commit-hashes = log --pretty=format:"%h"
+	# Shows the commit hashes of any given commit-range (an 'echo' is needed before 'tac', because otherwise the last 2 commits would be combined in the same line)
+	commit-hashes = "!f() { (git log --pretty=format:\"%h\" "$@"; echo) | tac; }; f"
+	
 	# From https://jordanelver.co.uk/blog/2020/06/04/fixing-commits-with-git-commit-fixup-and-git-rebase-autosquash/
 	fixup = "!git log -n 50 --pretty=format:'%h %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
 
