@@ -1,0 +1,37 @@
+#!/bin/bash
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+	echo \
+		"Usage: git commit-hashes [-h | --help]
+
+This script allows you to print all the commit hashes between two selected commits. It is particularly useful for cherry-picking entire branches and applying those commits to a new one.
+
+Options:
+  --help    Show this help message and exit
+
+How it works:
+1. The script uses 'git log' and 'fzf' to let you select two commits.
+2. It determines which of the selected commits is the ancestor.
+3. It prints all commit hashes between the ancestor and the child commit, including the ancestor, in reverse order."
+	exit 0
+fi
+
+# Create array of 2 commits
+mapfile -t COMMITS < <(git log --oneline "$@" | fzf --multi 2 | awk '{print $1}')
+
+# Find which commit is the ancestor
+if git merge-base --is-ancestor "${COMMITS[0]}" "${COMMITS[1]}"; then
+	ANCESTOR="${COMMITS[0]}"
+	CHILD="${COMMITS[1]}"
+elif git merge-base --is-ancestor "${COMMITS[1]}" "${COMMITS[0]}"; then
+	ANCESTOR="${COMMITS[1]}"
+	CHILD="${COMMITS[0]}"
+else
+	echo "they're cousins bro :("
+	exit 1
+fi
+
+# And then print the commit hashes between both commits, including the ancestor
+(
+	git log --pretty=format:"%h" "$ANCESTOR"~1.."$CHILD"
+	echo
+) | tac
