@@ -1,0 +1,9 @@
+#!/bin/bash
+
+CONTEXT="$1"
+
+# You may now commit
+# AI_COMMIT_MSG="$(git diff --staged | aichat.exe --role commit-msg "Write a commit message for this git-diff. Context: $CONTEXT" | fmt --width=72)"
+AI_COMMIT_MSG="$(git diff --staged | aichat.exe --role commit-msg "Write a commit message for this git-diff. Context: $CONTEXT" | pandoc --from markdown --to markdown --columns=72 --wrap=preserve)"
+
+echo "$AI_COMMIT_MSG" | git commit --edit --file -
