@@ -22,7 +22,9 @@ if status is-interactive
     end
 
     # Bindings
-    bind '[3;5~' kill-word  # ctrl + supr: delete word to the right
+    if [ $XDG_CURRENT_DESKTOP != 'GNOME' ]
+        bind '[3;5~' kill-word  # ctrl + supr: delete word to the right
+    end
 
     set -x MANPAGER 'nvim +Man!'
 end
