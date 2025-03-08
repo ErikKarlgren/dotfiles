@@ -8,5 +8,6 @@
 !.local/bin/
 !.local/bin/*
 !.config/
+!.config/*
 .dotfiles/
 !README.md
