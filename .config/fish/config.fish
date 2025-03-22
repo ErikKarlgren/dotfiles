@@ -21,12 +21,6 @@ if status is-interactive
         alias random (which random)
     end
 
-    # Bindings
-    if [ $XDG_CURRENT_DESKTOP != 'GNOME' ]
-        bind '[3;5~' kill-word  # ctrl + supr: delete word to the right
-    end
-
-    set -x MANPAGER 'nvim +Man!'
 end
 
 set -x EDITOR "nvim"
