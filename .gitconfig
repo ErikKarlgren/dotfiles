@@ -1,7 +1,15 @@
 [user]
-	name = exeekd
-	mail = exeekd@gmv.com
-	email = exeekd@gmv.com
+	name = Erik Karlgren Domercq
+	email = ekarlgren.ext@gmv.com
+
+[column]
+	ui = auto
+
+[branch]
+	sort = -committerdate
+
+[tag]
+        sort = version:refname
 
 [alias]
 	a = add
@@ -12,15 +20,19 @@
 	co = commit
 	coi = commit --interactive
 	cp = cherry-pick
+	cpa = cherry-pick --abort
+	cpc = cherry-pick --continue
+	cps = cherry-pick --skip
 	d = diff
 	dno = diff --name-only
 	ds = diff --staged
+	log1 = log --oneline
 	pf = push --force-with-lease
 	ps = push
 	rc = rebase --continue
 	re = rebase
 	ri = rebase -i
-	ria = rebase -i --autosquash
+	; ria = rebase -i --autosquash
 	s = status -s
 	st = status
 	sw = switch
@@ -33,7 +45,7 @@
 	# Push the current branch to a given remote, or to origin instead
 	# There's a git config option that lets one use just "push" instead, but I think I'd rather be more explicit
 	# In any case, doing "git pushups" sounds funny
-	pushup = "!f() { remote=\"${1:-origin}\"; git push --set-upstream \"$remote\" \"$(git branch --show-current)\"; }; f"
+	; pushup = "!f() { remote=\"${1:-origin}\"; git push --set-upstream \"$remote\" \"$(git branch --show-current)\"; }; f"
 
 	# git switch with fzf
 	swz = "!f() { git switch $(git branch | tr --delete '* ' | fzf --header='Select a branch to switch to' --preview='git log --oneline --color -50 {}'); }; f"
@@ -77,20 +89,24 @@
 	line-numbers-minus-style = red auto
 
 [diff]
+	algorithm = histogram
+	colorMoved = true
+	mnemonicPrefix = true
+
 	# Detect copies as well as renames
 	renames = copies
-	colorMoved = true
-	algorithm = histogram
+
 [diff "bin"]
 	# Use `hexdump` to diff binary files.
 	textconv = hexdump -v -C
 
 [fetch]
+	all = true
 	prune = true
+	pruneTags = true
 
 [help]
-	# Automatically correct and execute mistyped commands.
-	autocorrect = 1
+	autocorrect = prompt
 
 [init]
 	defaultBranch = main
@@ -99,11 +115,23 @@
 	diffFilter = delta --color-only
 
 [merge]
-	conflictstyle = diff3
+	conflictstyle = zdiff3
 
 [push]
+        autoSetupRemote = true
+	default = simple
+
 	# Make `git push` push relevant annotated tags when pushing branches out.
 	followTags = true
 
 [rerere]
+	autoupdate = true
 	enabled = true
+
+[commit]
+	verbose = true
+
+[rebase]
+        autoSquash = true
+        autoStash = true
+        updateRefs = true
