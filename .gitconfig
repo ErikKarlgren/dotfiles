@@ -45,7 +45,7 @@
 	# Push the current branch to a given remote, or to origin instead
 	# There's a git config option that lets one use just "push" instead, but I think I'd rather be more explicit
 	# In any case, doing "git pushups" sounds funny
-	; pushup = "!f() { remote=\"${1:-origin}\"; git push --set-upstream \"$remote\" \"$(git branch --show-current)\"; }; f"
+	pushup = "!f() { remote=\"${1:-origin}\"; git push --set-upstream \"$remote\" \"$(git branch --show-current)\"; }; f"
 
 	# git switch with fzf
 	swz = "!f() { git switch $(git branch | tr --delete '* ' | fzf --header='Select a branch to switch to' --preview='git log --oneline --color -50 {}'); }; f"
