@@ -106,7 +106,7 @@
 	pruneTags = true
 
 [help]
-	autocorrect = prompt
+	autocorrect = 0
 
 [init]
 	defaultBranch = main
@@ -115,7 +115,7 @@
 	diffFilter = delta --color-only
 
 [merge]
-	conflictstyle = zdiff3
+	conflictstyle = diff3
 
 [push]
         autoSetupRemote = true
