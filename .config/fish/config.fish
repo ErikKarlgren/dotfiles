@@ -21,9 +21,6 @@ if status is-interactive
         alias random (which random)
     end
 
-    # Bindings
-    bind '[3;5~' kill-word  # ctrl + supr: delete word to the right
-
     set -x MANPAGER 'nvim +Man!'
 end
 
@@ -33,4 +30,6 @@ set -x EDITOR "nvim"
 if [ "$hostname" = "ltexeekd" ]
     # Add npm (and node?) to path. If you need to run nvm, do so from bash instead.
     fish_add_path /root/.nvm/versions/node/v22.4.1/bin/
+    # Add tools meant for GMV
+    fish_add_path /mnt/c/Projects/Tools/
 end
