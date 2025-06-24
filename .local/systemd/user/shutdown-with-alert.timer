@@ -1,0 +1,11 @@
+[Unit]
+Description=Run shutdown with alert dialog every 5 minutes when it's time to sleep
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Timer]
+OnCalendar=*-*-* *:00/1:00
+#OnCalendar=*-*-* 00..05:00/5
+
+[Install]
+WantedBy=graphical-session.target

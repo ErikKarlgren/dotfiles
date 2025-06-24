@@ -1,0 +1,9 @@
+[Unit]
+Description=Power adapter monitor daemon. Notifies the user when battery is in use.
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/erik/.local/bin/power-monitor.sh
+StandardOutput=journal+console
+StandardError=journal+console

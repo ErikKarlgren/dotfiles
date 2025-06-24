@@ -1,0 +1,5 @@
+[Unit]
+Description=Shutdown with alert
+
+[Service]
+ExecStart=/home/erik/.local/bin/shutdown_with_alert

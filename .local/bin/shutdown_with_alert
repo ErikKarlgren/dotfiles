@@ -1,8 +1,7 @@
 #!/bin/bash
 
 kdialog \
---warningyesno "It's late ($(date +%H:%M)) and you have to go to work \
-tomorrow.\n\nShut down now?" \
---title "Time to sleep" \
-&& echo "Shutting down..." \
-&& shutdown -h now
+	--warningyesno "It's late ($(date +%H:%M)) and you have to go to work tomorrow.\n\nShut down now?" \
+	--title "Time to sleep" \
+	&& echo "Shutting down..." \
+	&& shutdown -h now
