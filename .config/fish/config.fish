@@ -21,6 +21,9 @@ if status is-interactive
         alias random (which random)
     end
 
+    # Do not bind ctrl-v to search variables with fzf
+    fzf_configure_bindings --variables=
+
 end
 
 set -x EDITOR "nvim"
