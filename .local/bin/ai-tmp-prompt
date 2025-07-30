@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+
+# #!/bin/bash
+# prompt=$(echo "$@" | aichat --role '%create-prompt%')
+# printf ">>> Generated prompt:\n%s\n\n" "$prompt"
+# aichat --prompt "$prompt"
+
+import argparse
+from pydoc import text
+import subprocess
+import sys
+
+
+def main():
+    prompt: str = parse_args().prompt.strip()
+
+    if len(prompt) == 0:
+        try:
+            prompt: str = ask_for_prompt().strip()
+
+            if len(prompt) == 0:
+                error("Cannot use an empty or whitespace-only prompt")
+                exit(1)
+
+        except KeyboardInterrupt:
+            error("Input interrupted by the user", breakline_before=True)
+            exit(1)
+
+    info("Improving your prompt...")
+    improved_prompt: str = improve_prompt(prompt)
+
+    info(f"New improved prompt:\n{improved_prompt}")
+    run_aichat(improved_prompt)
+
+
+def info(msg: str):
+    error(msg)
+
+
+def error(msg: str, breakline_before: bool = False):
+    if breakline_before:
+        print("\n", end="", file=sys.stderr)
+    print(">>>", msg, file=sys.stderr)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Creates a temporary role for aichat with '--prompt'"
+    )
+    _ = parser.add_argument(
+        "prompt",
+        nargs="?",
+        default="",
+        help="Prompt for the temporary role. If empty, the user will be asked for it interactively",
+    )
+    return parser.parse_args()
+
+
+def ask_for_prompt() -> str:
+    info(
+        "Please, enter your prompt. It might contain several lines. "
+        + "Press Ctrl+D (or Ctrl+Z then Enter on Windows) when you are finished:"
+    )
+    lines: list[str] = sys.stdin.readlines()
+    text: str = "".join(lines)
+    return text
+
+
+def improve_prompt(prompt: str) -> str:
+    return subprocess.run(
+        ["aichat", "--role", "%create-prompt%", prompt], text=True, capture_output=True
+    ).stdout
+
+
+def run_aichat(prompt: str):
+    _ = subprocess.run(["aichat", "--prompt", prompt])
+
+
+if __name__ == "__main__":
+    main()
