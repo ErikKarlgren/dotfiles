@@ -1,6 +1,8 @@
 if status is-interactive
     # Commands to run in interactive sessions can go here
     set fish_greeting
+    # starship shell prompt
+    starship init fish | source
 
     # Aliases
     alias diff 'git diff --no-index'
@@ -25,6 +27,7 @@ if status is-interactive
 end
 
 set -x EDITOR "nvim"
+fish_add_path ~/.cargo/bin/
 
 # Working at GMV
 if [ "$hostname" = "ltexeekd" ]
@@ -32,4 +35,5 @@ if [ "$hostname" = "ltexeekd" ]
     fish_add_path /root/.nvm/versions/node/v22.4.1/bin/
     # Add tools meant for GMV
     fish_add_path /mnt/c/Projects/Tools/
+    alias fd fdfind
 end
