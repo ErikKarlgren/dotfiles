@@ -1,27 +1,29 @@
 #!/bin/bash
+USAGE="Usage: $0 [ --ip,-i <hostname> | --user,-u <hostname> | --help,-h ] [ <query> ]"
+
 main() {
     local command="$1"
     case "$command" in
-        "" | "host")
-            choose_host
-            ;;
-        "ip")
+        "--ip" | "-i")
             local host
             host="${2:-$(choose_host)}"
             get_host_ip "$host"
             ;;
-        "user")
+        "--user" | "-u")
             local host
             host="${2:-$(choose_host)}"
             get_host_user "$host"
             ;;
-        "help")
+        "-h" | "--help")
             echo "Utility to quickly retrieve SSH host information from ~/.ssh/config."
-            echo "Usage: $0 [ host | ip [hostname] | user [hostname] | help ]"
+            echo "$USAGE"
             exit 0
             ;;
+        "")
+            choose_host
+            ;;
         *)
-            log_error "Unknown command: '$command'. Usage: $0 [ host | ip [hostname] | user [hostname] | help ]"
+            choose_host "$1"
             ;;
     esac
 }
@@ -48,8 +50,15 @@ choose_host() {
         log_error "No hosts found in ~/.ssh/config."
     fi
 
+    local query_flag
+    if [ -n "$1" ]; then
+        query_flag=("--query" "$1")
+    else
+        query_flag=()
+    fi
+
     local selected_host
-    selected_host=$(echo "$hosts" | fzf --prompt="Select a host: ")
+    selected_host=$(echo "$hosts" | fzf --prompt="Select a host: " "${query_flag[@]}")
     if [ -z "$selected_host" ]; then
         log_error "No host selected."
     fi
