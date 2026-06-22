@@ -1,0 +1,80 @@
+#!/bin/bash
+main() {
+    local command="$1"
+    case "$command" in
+        "" | "host")
+            choose_host
+            ;;
+        "ip")
+            local host
+            host="${2:-$(choose_host)}"
+            get_host_ip "$host"
+            ;;
+        "user")
+            local host
+            host="${2:-$(choose_host)}"
+            get_host_user "$host"
+            ;;
+        "help")
+            echo "Utility to quickly retrieve SSH host information from ~/.ssh/config."
+            echo "Usage: $0 [ host | ip [hostname] | user [hostname] | help ]"
+            exit 0
+            ;;
+        *)
+            log_error "Unknown command: '$command'. Usage: $0 [ host | ip [hostname] | user [hostname] | help ]"
+            ;;
+    esac
+}
+
+log_error() {
+    echo "ERROR: $*" >&2
+    exit 1
+}
+
+choose_host() {
+    if ! command -v fzf &> /dev/null; then
+        log_error "fzf is not installed. Please install fzf to use this script."
+    fi
+
+    local hosts
+    hosts=$(
+        awk '/^[[:space:]]*Host[[:space:]]+/ {
+            for (i=2; i<=NF; i++)
+                if ($i !~ /[*?]/ && $i != "*")
+                    print $i
+        }' ~/.ssh/config ~/.ssh/config.d/* 2>/dev/null | sort -u)
+
+    if [ -z "$hosts" ]; then
+        log_error "No hosts found in ~/.ssh/config."
+    fi
+
+    local selected_host
+    selected_host=$(echo "$hosts" | fzf --prompt="Select a host: ")
+    if [ -z "$selected_host" ]; then
+        log_error "No host selected."
+    fi
+
+    echo "$selected_host"
+}
+
+get_host_ip() {
+    local host="$1"
+    local ip
+    ip=$(ssh -G "$host" | awk '/^hostname / {print $2}')
+    if [ -z "$ip" ]; then
+        log_error "Could not retrieve IP for host '$host'."
+    fi
+    echo "$ip"
+}
+
+get_host_user() {
+    local host="$1"
+    local user
+    user=$(ssh -G "$host" | awk '/^user / {print $2}')
+    if [ -z "$user" ]; then
+        log_error "Could not retrieve user for host '$host'."
+    fi
+    echo "$user"
+}
+
+main "$@"
