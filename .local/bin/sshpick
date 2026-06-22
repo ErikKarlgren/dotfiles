@@ -58,7 +58,13 @@ choose_host() {
     fi
 
     local selected_host
-    selected_host=$(echo "$hosts" | fzf --prompt="Select a host: " "${query_flag[@]}")
+    selected_host=$(
+        echo "$hosts" | fzf \
+            --prompt="Select a host: " \
+            "${query_flag[@]}" \
+            --preview="ssh -G {} 2>/dev/null | awk '/^hostname / {print \"IP: \" \$2} /^user / {print \"User: \" \$2} /^port / {print \"Port: \" \$2}'" \
+            --preview-window=up:3:wrap
+        )
     if [ -z "$selected_host" ]; then
         log_error "No host selected."
     fi
