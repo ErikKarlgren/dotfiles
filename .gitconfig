@@ -52,20 +52,10 @@
 [core]
 	editor = nvim
 
-	# Use git-delta as pager
-	pager = delta
-
 	# Speed up commands involving untracked files such as `git status`.
 	# https://git-scm.com/docs/git-update-index#_untracked_cache
 	untrackedCache = true
 	excludesFile = ~/.gitignore-global
-
-[delta]
-	navigate = true    # use n and N to move between diff sections
-	syntax-theme = base16
-	line-numbers = true
-	line-numbers-plus-style = green auto
-	line-numbers-minus-style = red auto
 
 [diff]
 	# Detect copies as well as renames
@@ -86,9 +76,6 @@
 [init]
 	defaultBranch = main
 
-[interactive]
-	diffFilter = delta --color-only
-
 [merge]
 	conflictstyle = diff3
 
@@ -98,3 +85,8 @@
 
 [rerere]
 	enabled = true
+[credential]
+	helper = store
+
+[includeIf "gitdir:~/actia/"]
+    path = ~/actia/.gitconfig
