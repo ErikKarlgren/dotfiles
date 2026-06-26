@@ -1,7 +1,5 @@
 #!/bin/bash
 USAGE="Usage: $0 [ --help,-h | --ip,-i <hostname> | --user,-u <hostname> | --port,-p <hostname> ] [ <query> ]"
-YELLOW='\033[1;33m'
-LIGHT_BLUE='\033[1;34m'
 RED='\033[1;31m'
 NC='\033[0m' # No Color
 
@@ -91,23 +89,66 @@ choose_host() {
         query_flag=()
     fi
 
-    local preview_awk_cmd
-    preview_awk_cmd=$(cat <<EOF
-    /^user / {print "User: " \$2}
-    /^hostname / {print "Hostname: " \$2}
-    /^port / {print "Port: " \$2}
-    /^controlpath / {print "ControlPath: " \$2}
+    local fzf_preview_cmd
+    fzf_preview_cmd=$(cat <<"EOF"
+        host={}
+        cfg=$(ssh -G "$host" 2>/dev/null)
+
+        hostname=$(awk "/^hostname / {print \$2}" <<< "$cfg")
+        port=$(awk "/^port / {print \$2}" <<< "$cfg")
+        control=$(awk "/^controlpath / {print \$2}" <<< "$cfg")
+
+        # Check if the host is reachable and get latency
+        timeout_value=0.3
+        timeout "$timeout_value" nc -z -w1 "$hostname" "$port" 2>/dev/null && reach=yes || reach=no
+        lat=$(timeout "$timeout_value" ping -c1 "$hostname" 2>/dev/null | awk -F"time=" "/time=/{print \$2}" | cut -d" " -f1)
+        lat=${lat:-"n/a"}
+
+        # Check if the control socket exists
+        [ -S "$control" ] && conn=yes || conn=no
+
+        awk -v reach="$reach" -v lat="$lat" -v conn="$conn" '
+            BEGIN {
+              c="\033[36m"; ok="\033[32m"; bad="\033[31m"; dim="\033[90m"; r="\033[0m"
+            }
+
+            /^user /        { user=$2 }
+            /^hostname /    { host=$2 }
+            /^port /        { port=$2 }
+            /^controlpath / { control=$2 }
+
+            END {
+              printf "%sUser:%s            %s\n", c, r, user
+              printf "%sHostname:%s        %s\n", c, r, host
+              printf "%sPort:%s            %s\n", c, r, port
+
+              printf "%sReachable (SSH):%s %s%s%s\n", c, r,
+                     (reach=="yes" ? ok : bad),
+                     (reach=="yes" ? "yes" : "no"),
+                     r
+
+              printf "%sLatency (ping):%s  %s ms\n", c, r,
+                     (lat=="" ? "n/a" : lat)
+
+              printf "%sConnected:%s       %s%s%s\n", c, r,
+                     (conn=="yes" ? ok : dim),
+                     (conn=="yes" ? "yes" : "no"),
+                     r
+
+              printf "%sControlPath:%s     %s\n", c, r, control
+            }
+        ' <<< "$cfg"
 EOF
     )
 
     local selected_host
     selected_host=$(
-        echo "$hosts" | fzf \
-            --height=16 \
+        echo "$hosts" | SHELL="bash" fzf \
+            --height=24 \
             --prompt="Select a host: " \
             "${query_flag[@]}" \
-            --preview="ssh -G {} 2>/dev/null | awk '$preview_awk_cmd' | column -t" \
-            --preview-window=up:4 \
+            --preview="$fzf_preview_cmd" \
+            --preview-window=up:7 \
             --preview-label="Host details" \
             --preview-label-pos=+3
         )
