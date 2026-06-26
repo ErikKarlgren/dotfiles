@@ -30,6 +30,11 @@ main() {
             host="${2:-$(choose_host)}"
             get_host_port "$host"
             ;;
+        "--control-path" | "-c")
+            local host
+            host="${2:-$(choose_host)}"
+            get_host_control_path "$host"
+            ;;
         "")
             choose_host
             ;;
@@ -91,17 +96,18 @@ choose_host() {
     /^user / {print "User: " \$2}
     /^hostname / {print "Hostname: " \$2}
     /^port / {print "Port: " \$2}
+    /^controlpath / {print "ControlPath: " \$2}
 EOF
     )
 
     local selected_host
     selected_host=$(
         echo "$hosts" | fzf \
-            --height=10 \
+            --height=16 \
             --prompt="Select a host: " \
             "${query_flag[@]}" \
             --preview="ssh -G {} 2>/dev/null | awk '$preview_awk_cmd' | column -t" \
-            --preview-window=up:3 \
+            --preview-window=up:4 \
             --preview-label="Host details" \
             --preview-label-pos=+3
         )
@@ -140,6 +146,16 @@ get_host_port() {
         log_error "Could not retrieve port for host '$host'"
     fi
     echo "$port"
+}
+
+get_host_control_path() {
+    local host="$1"
+    local control_path
+    control_path=$(ssh -G "$host" | awk '/^controlpath / {print $2}')
+    if [ -z "$control_path" ]; then
+        log_error "Could not retrieve control path for host '$host'"
+    fi
+    echo "$control_path"
 }
 
 main "$@"
