@@ -31,8 +31,3 @@ end
 
 set -x EDITOR "nvim"
 
-# Working at GMV
-if [ "$hostname" = "ltexeekd" ]
-    # Add npm (and node?) to path. If you need to run nvm, do so from bash instead.
-    fish_add_path /root/.nvm/versions/node/v22.4.1/bin/
-end
