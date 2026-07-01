@@ -26,6 +26,9 @@ if status is-interactive
 
     if not functions -q fisher
         curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
+        # Install plugins in fish_plugins
+        fisher install
+        echo "Please install: fzf, bat"
     end
 end
 
