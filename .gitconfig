@@ -49,6 +49,9 @@
 	changed = green
 	untracked = cyan
 
+[commit]
+	verbose = true
+
 [core]
 	editor = nvim
 
