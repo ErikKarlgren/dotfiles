@@ -164,44 +164,35 @@ EOF
     echo "$selected_host"
 }
 
+get_ssh_field() {
+    local host="$1"
+    local field="$2"
+    local value
+    value=$(ssh -G "$host" | awk -v field="$field" '$1 == field {print $2}')
+    if [ -z "$value" ]; then
+        log_error "Could not retrieve $field for host '$host'"
+    fi
+    echo "$value"
+}
+
 get_host_ip() {
     local host="$1"
-    local ip
-    ip=$(ssh -G "$host" | awk '/^hostname / {print $2}')
-    if [ -z "$ip" ]; then
-        log_error "Could not retrieve IP for host '$host'"
-    fi
-    echo "$ip"
+    get_ssh_field "$host" "hostname"
 }
 
 get_host_user() {
     local host="$1"
-    local user
-    user=$(ssh -G "$host" | awk '/^user / {print $2}')
-    if [ -z "$user" ]; then
-        log_error "Could not retrieve user for host '$host'"
-    fi
-    echo "$user"
+    get_ssh_field "$host" "user"
 }
 
 get_host_port() {
     local host="$1"
-    local port
-    port=$(ssh -G "$host" | awk '/^port / {print $2}')
-    if [ -z "$port" ]; then
-        log_error "Could not retrieve port for host '$host'"
-    fi
-    echo "$port"
+    get_ssh_field "$host" "port"
 }
 
 get_host_control_path() {
     local host="$1"
-    local control_path
-    control_path=$(ssh -G "$host" | awk '/^controlpath / {print $2}')
-    if [ -z "$control_path" ]; then
-        log_error "Could not retrieve control path for host '$host'"
-    fi
-    echo "$control_path"
+    get_ssh_field "$host" "controlpath"
 }
 
 main "$@"
