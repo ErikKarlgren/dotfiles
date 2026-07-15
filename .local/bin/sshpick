@@ -1,5 +1,7 @@
 #!/bin/bash
-USAGE="Usage: $0 [ --help,-h | --ip,-i <hostname> | --user,-u <hostname> | --port,-p <hostname> ] [ <query> ]"
+USAGE="Usage: $0 [ --help,-h | --ip,-i <hostname> | --user,-u <hostname> | --port,-p <hostname> ] [ <query> ]
+
+If the env var SSHPICK_VERBOSE is set, sshpick will print debug information to stderr"
 RED='\033[1;31m'
 NC='\033[0m' # No Color
 
@@ -12,34 +14,45 @@ main() {
     fi
 
     check_dependencies
+    local stdout
+            local host
+
     case "$command" in
         "--ip" | "-i")
-            local host
             host="${2:-$(choose_host)}"
-            get_host_ip "$host"
+            stdout="$(get_host_ip "$host")"
             ;;
         "--user" | "-u")
             local host
             host="${2:-$(choose_host)}"
-            get_host_user "$host"
+            stdout="$(get_host_user "$host")"
             ;;
         "--port" | "-p")
             local host
             host="${2:-$(choose_host)}"
-            get_host_port "$host"
+            stdout="$(get_host_port "$host")"
             ;;
         "--control-path" | "-c")
             local host
             host="${2:-$(choose_host)}"
-            get_host_control_path "$host"
+            stdout="$(get_host_control_path "$host")"
             ;;
         "")
-            choose_host
+            host="$(choose_host)"
             ;;
         *)
-            choose_host "$1"
+            host="$(choose_host "$1")"
             ;;
     esac
+
+    if [ -n "$SSHPICK_VERBOSE" ]; then
+        echo "[sshpick] host \"$host\"   ">&2
+        if [ -n "$stdout" ]; then
+            echo "[sshpick] output: \"$stdout\"" >&2
+        fi
+    fi
+
+    echo "$stdout"
 }
 
 check_dependencies() {
