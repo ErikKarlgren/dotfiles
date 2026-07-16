@@ -1,9 +1,12 @@
 #!/bin/bash
-USAGE="Usage: $0 [ --help,-h | --ip,-i <hostname> | --user,-u <hostname> | --port,-p <hostname> ] [ <query> ]
+USAGE="Usage: $0 [ --help,-h | --multi | --ip,-i <hostname> | --user,-u <hostname> | --port,-p <hostname> ] [ <query> ]
 
 If the env var SSHPICK_VERBOSE is set, sshpick will print debug information to stderr"
 RED='\033[1;31m'
 NC='\033[0m' # No Color
+
+# Globals
+MULTI_SELECT=0
 
 main() {
     local command="$1"
@@ -23,33 +26,34 @@ main() {
             stdout="$(get_host_ip "$host")"
             ;;
         "--user" | "-u")
-            local host
             host="${2:-$(choose_host)}"
             stdout="$(get_host_user "$host")"
             ;;
         "--port" | "-p")
-            local host
             host="${2:-$(choose_host)}"
             stdout="$(get_host_port "$host")"
             ;;
         "--control-path" | "-c")
-            local host
             host="${2:-$(choose_host)}"
             stdout="$(get_host_control_path "$host")"
             ;;
+        "--multi" | "-m")
+            MULTI_SELECT=1
+            stdout="$(choose_host)"
+            ;;
         "")
-            host="$(choose_host)"
+            stdout="$(choose_host)"
             ;;
         *)
-            host="$(choose_host "$1")"
+            stdout="$(choose_host "$1")"
             ;;
     esac
 
     if [ -n "$SSHPICK_VERBOSE" ]; then
-        echo "[sshpick] host \"$host\"   ">&2
-        if [ -n "$stdout" ]; then
-            echo "[sshpick] output: \"$stdout\"" >&2
+        if [ -n "$host" ]; then
+            echo "[sshpick] host \"$host\"">&2
         fi
+        echo "[sshpick] output: \"$stdout\"" >&2
     fi
 
     echo "$stdout"
@@ -86,6 +90,11 @@ choose_host() {
             return
         fi
         log_error "No TTY available for interactive host selection. Please provide a query or run in an interactive terminal"
+    fi
+
+    local multi_select_flag=()
+    if [ "$MULTI_SELECT" -eq 1 ]; then
+        multi_select_flag=("--multi")
     fi
 
     mapfile -t ssh_config < <(
@@ -178,6 +187,7 @@ EOF
             --height=24 \
             --prompt="Select a host: " \
             "${query_flag[@]}" \
+            "${multi_select_flag[@]}" \
             --preview="$fzf_preview_cmd" \
             --preview-window=up:7 \
             --preview-label="Host details" \
