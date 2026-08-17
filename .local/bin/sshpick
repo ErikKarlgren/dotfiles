@@ -40,6 +40,10 @@ main() {
         "--multi" | "-m")
             MULTI_SELECT=1
             stdout="$(choose_host)"
+            for host in $stdout; do
+                main $2 $host
+            done
+            exit
             ;;
         "")
             stdout="$(choose_host)"
@@ -190,7 +194,7 @@ EOF
             "${multi_select_flag[@]}" \
             --preview="$fzf_preview_cmd" \
             --preview-window=up:7 \
-            --preview-label="Host details" \
+            --preview-label="모Host details" \
             --preview-label-pos=+3
     )
     # Admit hosts not found in the config if a query is provided just in case
