@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+IMAGE_NAME="${PI_PODMAN_IMAGE:-pi-sandbox}"
+AGENT_MOUNT="${PI_PODMAN_AGENT_MOUNT:-$HOME/.pi/agent}"
+AGENT_TARGET="${PI_PODMAN_AGENT_TARGET:-/root/.pi/agent}"
+DOCKERFILE="${PI_PODMAN_DOCKERFILE:-$HOME/bin/Dockerfile.pi}"
+
+rebuild=0
+if [[ "${1:-}" == "--rebuild" ]]; then
+  rebuild=1
+  shift
+else
+  echo "To rebuild the image in case there's a new pi version, run with --rebuild" >&2
+fi
+
+if [[ $rebuild -eq 1 ]] || ! podman image exists "$IMAGE_NAME"; then
+  build_args=(--pull=always -t "$IMAGE_NAME" -f "$DOCKERFILE")
+  if [[ $rebuild -eq 1 ]]; then
+    # Generate a unique build arg to bust the npm cache, so that we always get the latest pi version
+    build_args+=(--build-arg "PI_NPM_CACHE_BUST=$(date +%s%N)-$RANDOM")
+  fi
+
+  podman build "${build_args[@]}" .
+  printf 'Rebuilt %s with pi %s\n' \
+    "$IMAGE_NAME" \
+    "$(podman run --rm --entrypoint /bin/sh "$IMAGE_NAME" -c 'pi --version')" >&2
+fi
+
+exec podman run --rm -it \
+  --network=host \
+  -e TERM \
+  -e COLORTERM \
+  -e CLICOLOR \
+  -e CLICOLOR_FORCE \
+  -e NO_COLOR \
+  -v "$PWD:/workspace:Z" \
+  -v "$AGENT_MOUNT:$AGENT_TARGET:Z" \
+  "$IMAGE_NAME" \
+  "$@"

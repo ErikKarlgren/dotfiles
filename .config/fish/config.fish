@@ -34,3 +34,6 @@ end
 
 set -x EDITOR "nvim"
 
+
+# Pi
+fish_add_path "$HOME/.local/share/pi-node/node-v22.23.2-linux-x64/bin"

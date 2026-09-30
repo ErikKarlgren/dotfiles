@@ -1,0 +1,20 @@
+{
+  "lastChangelogVersion": "0.99.1",
+  "defaultProvider": "github-copilot",
+  "defaultModel": "gpt-5.4",
+  "defaultThinkingLevel": "medium",
+  "images": {
+    "blockImages": true
+  },
+  "markdown": {
+    "mermaid": "streaming"
+  },
+  "packages": [
+    {
+      "source": "npm:pi-web-access",
+      "extensions": [
+        "+index.ts"
+      ]
+    }
+  ]
+}

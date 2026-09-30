@@ -1,0 +1,17 @@
+FROM node:24-bookworm-slim
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    bash \
+    ca-certificates \
+    git \
+    ripgrep \
+    python3 \
+    php \
+  && rm -rf /var/lib/apt/lists/*
+
+ARG PI_NPM_CACHE_BUST=initial
+RUN printf '%s\n' "$PI_NPM_CACHE_BUST" >/dev/null \
+  && npm install -g --ignore-scripts @earendil-works/pi-coding-agent @alibaba-group/open-code-review
+WORKDIR /workspace
+ENTRYPOINT ["pi"]

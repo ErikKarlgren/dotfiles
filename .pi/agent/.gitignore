@@ -1,0 +1,13 @@
+# secrets
+auth.json
+
+# local/runtime state
+trust.json
+sessions/
+.pi/context-mode/
+.pi/web-search-cache/
+
+# generated installs/caches
+bin/
+npm/
+models-store.json
