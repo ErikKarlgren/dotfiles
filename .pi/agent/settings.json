@@ -1,7 +1,7 @@
 {
-  "lastChangelogVersion": "0.99.1",
+  "lastChangelogVersion": "1.0.4",
   "defaultProvider": "github-copilot",
-  "defaultModel": "gpt-5.4",
+  "defaultModel": "gpt-6-luna",
   "defaultThinkingLevel": "medium",
   "images": {
     "blockImages": true
@@ -9,6 +9,7 @@
   "markdown": {
     "mermaid": "streaming"
   },
+  "defaultTools": ["+codemode"],
   "packages": [
     {
       "source": "npm:pi-web-access",
