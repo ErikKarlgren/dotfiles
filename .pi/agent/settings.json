@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.0.4",
+  "lastChangelogVersion": "1.2.0",
   "defaultProvider": "github-copilot",
   "defaultModel": "gpt-6-luna",
   "defaultThinkingLevel": "medium",
@@ -9,13 +9,16 @@
   "markdown": {
     "mermaid": "streaming"
   },
-  "defaultTools": ["+codemode"],
+  "defaultTools": [
+    "+codemode"
+  ],
   "packages": [
     {
       "source": "npm:pi-web-access",
       "extensions": [
         "+index.ts"
       ]
-    }
+    },
+    "npm:billion-context"
   ]
 }
