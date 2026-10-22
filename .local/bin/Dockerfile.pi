@@ -8,6 +8,7 @@ RUN apt-get update \
     ripgrep \
     python3 \
     php \
+    build-essential \
   && rm -rf /var/lib/apt/lists/*
 
 ARG PI_NPM_CACHE_BUST=initial
