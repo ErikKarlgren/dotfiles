@@ -9,10 +9,15 @@ RUN apt-get update \
     python3 \
     php \
     build-essential \
-  && rm -rf /var/lib/apt/lists/*
+    podman \
+    python3 \
+    cmake \
+  && rm -rf /var/lib/apt/lists/* \
+  && ln -s /usr/bin/podman /usr/bin/docker
 
 ARG PI_NPM_CACHE_BUST=initial
 RUN printf '%s\n' "$PI_NPM_CACHE_BUST" >/dev/null \
   && npm install -g --ignore-scripts @earendil-works/pi-coding-agent @alibaba-group/open-code-review
+
 WORKDIR /workspace
 ENTRYPOINT ["pi"]
