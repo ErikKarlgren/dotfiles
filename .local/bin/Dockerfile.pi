@@ -1,7 +1,7 @@
 FROM node:24-bookworm-slim
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     bash \
     ca-certificates \
     git \
@@ -12,6 +12,7 @@ RUN apt-get update \
     podman \
     python3 \
     cmake \
+    tshark \
   && rm -rf /var/lib/apt/lists/* \
   && ln -s /usr/bin/podman /usr/bin/docker
 
